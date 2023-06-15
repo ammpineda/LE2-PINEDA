@@ -19,21 +19,19 @@ namespace BlogDataLibrary.Database
             _config = config;
         }
 
-        public List<T> LoadData<T, U>(string sqlStatement, U parameters, 
-            string connectionStringName, bool isStoredProcedure)
+        public List<T> LoadData<T, U>(string sqlStatement, U parameters, string connectionStringName, bool isStoredProcedure)
         {
             CommandType commandType = CommandType.Text;
-            string connectionString = _config.GetConnectionString(connectionStringName);
+            string connectionString =_config.GetConnectionString(connectionStringName);
 
             if (isStoredProcedure)
             {
                 commandType = CommandType.StoredProcedure;
             }
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BlogDB;Integrated Security=True;Connect Timeout=30;"))
             {
-                List<T> rows = connection.Query<T>(sqlStatement, parameters,
-                    commandType: commandType).ToList();
+                List<T> rows = connection.Query<T>(sqlStatement, parameters, commandType: commandType).ToList();
                 return rows;
             }
         }
@@ -49,7 +47,7 @@ namespace BlogDataLibrary.Database
                 commandType = CommandType.StoredProcedure;
             }
 
-            using (IDbConnection connection = new SqlConnection(connectionString))
+            using (IDbConnection connection = new SqlConnection("Data Source=(localdb)\\MSSQLLocalDB;Initial Catalog=BlogDB;Integrated Security=True;Connect Timeout=30;"))
             {
                 connection.Execute(sqlStatement, parameters, commandType: commandType);
             }
